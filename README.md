@@ -20,11 +20,36 @@ default  192.168.64.0/24                                ✓ healthy
 ## Install
 
 ```bash
+brew install zdk/tools/container-netpath
+```
+
+Then register it with `container`. If you installed `container` from Apple's `.pkg`:
+
+```bash
+sudo mkdir -p /usr/local/libexec/container-plugins
+sudo ln -sfn $(brew --prefix)/opt/container-netpath/libexec/netpath /usr/local/libexec/container-plugins/netpath
+```
+
+If you installed `container` with Homebrew:
+
+```bash
+mkdir -p $(brew --prefix)/libexec/container-plugins
+ln -sfn $(brew --prefix)/opt/container-netpath/libexec/netpath $(brew --prefix)/libexec/container-plugins/netpath
+```
+
+Building from source needs a current Xcode.
+
+<details>
+<summary>Build from source</summary>
+
+```bash
 make build
 sudo make install
 ```
 
-The plugin is installed to `/usr/local/libexec/container-plugins/netpath`.
+This installs to `/usr/local/libexec/container-plugins/netpath`.
+
+</details>
 
 ## Use
 
