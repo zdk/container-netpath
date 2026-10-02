@@ -78,7 +78,7 @@ func collect() throws -> Facts {
     return Facts(networks: networks, containers: containers, ifaces: ifaces, routes: routes, egress: egress)
 }
 
-private func sh(_ args: String...) throws -> String {
+func sh(_ args: String...) throws -> String {
     let p = Process()
     p.executableURL = URL(fileURLWithPath: "/usr/bin/env")
     p.arguments = args

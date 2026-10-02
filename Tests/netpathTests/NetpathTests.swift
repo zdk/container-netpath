@@ -83,3 +83,9 @@ func facts(_ networks: [Network], _ containers: [Container], routes: [String: St
     #expect(n.containers.map(\.name) == ["a2"])
     #expect(n.status == "healthy")
 }
+
+@Test func stablePathUsesBrewOpt() {
+    #expect(stablePath("/opt/homebrew/Cellar/container-netpath/0.1.0/libexec/netpath")
+            == "/opt/homebrew/opt/container-netpath/libexec/netpath")
+    #expect(stablePath("/usr/local/libexec/x/netpath") == "/usr/local/libexec/x/netpath")
+}

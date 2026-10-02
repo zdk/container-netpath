@@ -2,8 +2,10 @@ import Foundation
 
 let usage = """
     USAGE: container netpath [<network | container | ip>] [--json]
+           netpath enable | disable
 
     Shows how traffic leaves each container network and where it breaks.
+    `netpath enable` makes `container netpath` work (asks for sudo if needed).
 
     OPTIONS:
       --json      Print JSON (for scripts and agents)
@@ -18,6 +20,14 @@ let usage = """
 var args = Array(CommandLine.arguments.dropFirst())
 if args.contains("-h") || args.contains("--help") {
     print(usage)
+    exit(0)
+}
+// ponytail: a container named "enable" or "disable" can still be shown by its IP.
+if args == ["enable"] || args == ["disable"] {
+    do { try args[0] == "enable" ? enable() : disable() } catch {
+        FileHandle.standardError.write(Data("Error: \(error)\n".utf8))
+        exit(2)
+    }
     exit(0)
 }
 let json = args.contains("--json")

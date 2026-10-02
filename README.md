@@ -1,6 +1,6 @@
 # netpath
 
-A plugin for [apple/container](https://github.com/apple/container). It shows how traffic leaves each container network, and where it stops.
+Shows how traffic leaves each [apple/container](https://github.com/apple/container) network, and where it stops.
 
 ```
 $ container netpath
@@ -8,7 +8,7 @@ default  192.168.64.0/24                                ✓ healthy
 
   buildkit 192.168.64.2 ─┐
 ═════════════════════════╪═══ host ══════
-  vmenet0, vmenet1       ▼
+  vmenet0                ▼
   bridge100              ▼  gw 192.168.64.1
   route                  ▼  192.168.64.0/24 → bridge100
   NAT                    ▼  → 192.168.1.140
@@ -21,35 +21,10 @@ default  192.168.64.0/24                                ✓ healthy
 
 ```bash
 brew install zdk/tools/container-netpath
+netpath enable
 ```
 
-Then register it with `container`. If you installed `container` from Apple's `.pkg`:
-
-```bash
-sudo mkdir -p /usr/local/libexec/container-plugins
-sudo ln -sfn $(brew --prefix)/opt/container-netpath/libexec/netpath /usr/local/libexec/container-plugins/netpath
-```
-
-If you installed `container` with Homebrew:
-
-```bash
-mkdir -p $(brew --prefix)/libexec/container-plugins
-ln -sfn $(brew --prefix)/opt/container-netpath/libexec/netpath $(brew --prefix)/libexec/container-plugins/netpath
-```
-
-Building from source needs a current Xcode.
-
-<details>
-<summary>Build from source</summary>
-
-```bash
-make build
-sudo make install
-```
-
-This installs to `/usr/local/libexec/container-plugins/netpath`.
-
-</details>
+`netpath enable` adds the plugin to `container`. It asks for `sudo` only if needed. `netpath disable` removes it.
 
 ## Use
 
@@ -59,12 +34,13 @@ container netpath <name|ip>    # one network or container
 container netpath --json       # for scripts and agents
 ```
 
-When a network is broken, the step where traffic stops is marked `✗`. A `fix:` line underneath tells you what to do.
+A broken step is marked `✗`, with a `fix:` line below it.
 
-Exit codes: `0` healthy, `1` something is broken, `2` could not inspect the host.
+Exit codes: `0` healthy, `1` broken, `2` could not inspect the host.
 
 ## Notes
 
-- The NAT step is inferred, not checked. Reading the NAT rules needs root.
-- A network with no running containers shows as `idle`. vmnet only creates a bridge while a container is attached.
-- `bridge_missing` with several networks is usually [apple/container#2051](https://github.com/apple/container/issues/2051).
+- If `container` came from Homebrew, run `netpath enable` again after `brew upgrade container` ([#1617](https://github.com/apple/container/issues/1617)).
+- The NAT step is inferred. Checking it needs root.
+- A lost bridge with several networks is usually [#2051](https://github.com/apple/container/issues/2051).
+- Build from source: `make build && sudo make install`. Needs a current Xcode.
