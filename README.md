@@ -1,6 +1,6 @@
 # netpath
 
-Shows how traffic leaves each [apple/container](https://github.com/apple/container) network, and where it stops.
+Display [apple/container](https://github.com/apple/container) the packet traverses host network.
 
 ```
 $ container netpath
@@ -26,21 +26,16 @@ netpath enable
 
 `netpath enable` adds the plugin to `container`. It asks for `sudo` only if needed. `netpath disable` removes it.
 
-## Use
+## Usage
 
 ```bash
-container netpath              # every network
-container netpath <name|ip>    # one network or container
-container netpath --json       # for scripts and agents
+container netpath              # show for every network
+container netpath <name|ip>    # show for specified network name or container ip
+container netpath --json       # use for scripting and agents
 ```
 
-A broken step is marked `✗`, with a `fix:` line below it.
+A broken route is marked `✗`
 
-Exit codes: `0` healthy, `1` broken, `2` could not inspect the host.
+## Caveats
 
-## Notes
-
-- If `container` came from Homebrew, run `netpath enable` again after `brew upgrade container` ([#1617](https://github.com/apple/container/issues/1617)).
-- The NAT step is inferred. Checking it needs root.
-- A lost bridge with several networks is usually [#2051](https://github.com/apple/container/issues/2051).
-- Build from source: `make build && sudo make install`. Needs a current Xcode.
+- If you installed `container` with Homebrew, please run `netpath enable` again after `brew upgrade container`.
